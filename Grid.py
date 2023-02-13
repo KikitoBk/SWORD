@@ -23,10 +23,11 @@ class Grid:
         print(self.snake.getOccupiedSquares())
         if(self.snake.x == self.appleX and self.snake.y == self.appleY) :
             self.snake.grow()
+            self.spawnApple()
             
         if(self.snake.x < 0 or self.snake.y < 0 or self.snake.x > self.sizeX or self.snake.y > self.sizeY) :
             print('Snake hit a wall')
-        elif((self.snake.x,self.snake.y)in self.snake.getTailSquares()) :
+        elif((self.snake.x,self.snake.y) in self.snake.getTailSquares()) :
             print('Snake hit himself')
         else :
             Timer(self.tickInterval,self.onTick).start()
