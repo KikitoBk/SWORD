@@ -1,3 +1,4 @@
-def startGame() :
-    #TODO    create grid, snake, tick every x seconds
-    print('game started')
+from Grid import Grid 
+
+grid = Grid(10,10,1)
+    
