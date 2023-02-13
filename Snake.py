@@ -11,13 +11,9 @@ class Snake :
         for l in range(length) :
             self._bodyParts.append(Body(x,y+l+1))
         self._lastRemoved = Body(x,y+length+1)
-        
-        
             
     def getOccupiedSquares(self) :
-        occupiedSquare = [(self.x,self.y)]
-        occupiedSquare.extend(self.getTailSquares())
-        return occupiedSquare
+        return ([(self.x,self.y)]+self.getTailSquares())
     
     def getTailSquares(self) :
         return [(body.x,body.y) for body in self._bodyParts]
