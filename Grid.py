@@ -5,7 +5,7 @@ class Grid:
     def __init__(self,sizeX,sizeY,tickInterval):
         self.sizeX = sizeX
         self.sizeY = sizeY
-        self.snake = Snake(1,1,3)
+        self.snake = Snake(5,5,3)
         self.spawnApple()
         self.tickInterval = tickInterval
         Timer(tickInterval,self.onTick).start()
@@ -20,7 +20,8 @@ class Grid:
         
     def onTick(self) :
         self.snake.onTick()
-        print(self.snake.getOccupiedSquares())
+        #print(self.snake.getOccupiedSquares())
+        self.printGrind()
         if(self.snake.x == self.appleX and self.snake.y == self.appleY) :
             self.snake.grow()
             self.spawnApple()
@@ -31,3 +32,20 @@ class Grid:
             print('Snake hit himself')
         else :
             Timer(self.tickInterval,self.onTick).start()
+
+
+    def printGrind(self) :
+        print('+'+'-'*self.sizeX+'+')
+        for y in range(self.sizeY) :
+            line = '|'
+            for x in range(self.sizeX) :
+                if((x,y) in self.snake.getOccupiedSquares()) :
+                    line += 'O'
+                elif(x == self.appleX and y == self.appleY) :
+                    line += 'A'
+                else :
+                    line += ' '
+            line += '|'
+            print(line)
+        print('+'+'-'*self.sizeX+'+')
+
