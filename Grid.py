@@ -15,14 +15,11 @@ class Grid:
 
         self.appleX = randint(0,self.sizeX-1)
         self.appleY = randint(0,self.sizeY-1)
-        #self.appleY = 1
 
-        appleXY = (self.appleX,self.appleY)
-        while(appleXY in occupiedSquare) :
+        while((self.appleX,self.appleY) in occupiedSquare) :
             self.appleX = randint(0,self.sizeX-1)
-            self.appleY = randint(2,self.sizeX-1)
-            #self.appleY = 1
-            print('ok')
+            self.appleY = randint(2,self.sizeY-1)
+
 
 
 
