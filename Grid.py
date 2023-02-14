@@ -18,7 +18,7 @@ class Grid:
 
         while((self.appleX,self.appleY) in occupiedSquare) :
             self.appleX = randint(0,self.sizeX-1)
-            self.appleY = randint(2,self.sizeY-1)
+            self.appleY = randint(0,self.sizeY-1)
 
 
 
