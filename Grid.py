@@ -12,11 +12,20 @@ class Grid:
 
     def spawnApple(self): 
         occupiedSquare = self.snake.getOccupiedSquares()
-        self.appleX = randint(0,self.sizeX)
-        self.appleY = randint(0,self.sizeX)
-        while(self.appleX in occupiedSquare or self.appleY in occupiedSquare) :
-            self.appleX = randint(0,self.sizeX)
-            self.appleY = randint(0,self.sizeX)
+
+        self.appleX = randint(0,self.sizeX-1)
+        self.appleY = randint(0,self.sizeY-1)
+        #self.appleY = 1
+
+        appleXY = (self.appleX,self.appleY)
+        while(appleXY in occupiedSquare) :
+            self.appleX = randint(0,self.sizeX-1)
+            self.appleY = randint(2,self.sizeX-1)
+            #self.appleY = 1
+            print('ok')
+
+
+
         
     def onTick(self) :
         self.snake.onTick()

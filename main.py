@@ -1,3 +1,3 @@
 from Grid import Grid 
 
-grid = Grid(10,10,1)
+grid = Grid(10,10,0.5)
