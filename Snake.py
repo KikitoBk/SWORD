@@ -10,6 +10,8 @@ class Snake :
         self.nextDirection = Direction.UP
         self._lastRemoved = Body(x,y+length+1)
 
+        self.score = 0
+
         def on_press(key) :
             charKey = key.char
             if(charKey==Direction.LEFT.value or charKey==Direction.RIGHT.value or charKey==Direction.UP.value or charKey==Direction.DOWN.value) :
@@ -40,6 +42,8 @@ class Snake :
     
     def grow(self) :
         self._bodyParts.append(self._lastRemoved)
+        self.score += 1
+
 
     def turn(self,direction) :
         #print('turning',direction)

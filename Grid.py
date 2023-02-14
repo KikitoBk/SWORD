@@ -1,14 +1,23 @@
 from Snake import Snake
 from random import randint
 from threading import Timer
+from tkinter import *
+from tkinter import messagebox
+
 class Grid:
     def __init__(self,sizeX,sizeY,tickInterval):
         self.sizeX = sizeX
         self.sizeY = sizeY
-        self.snake = Snake(5,5,3)
+        self.squareSize = 10
+        self.XGridSize = sizeX * self.squareSize
+        self.YGridSize = sizeY * self.squareSize
+        self.snake = Snake(sizeX//2,sizeY//2,3)
+        self.snake2 = Snake(sizeX//3,sizeY//3,3)
         self.spawnApple()
         self.tickInterval = tickInterval
-        Timer(tickInterval,self.onTick).start()
+        self.drawGrid()
+        
+        
 
     def spawnApple(self): 
         occupiedSquare = self.snake.getOccupiedSquares()
@@ -27,7 +36,8 @@ class Grid:
     def onTick(self) :
         self.snake.onTick()
         #print(self.snake.getOccupiedSquares())
-        self.printGrind()
+        #self.printGrind()
+        
         if(self.snake.x == self.appleX and self.snake.y == self.appleY) :
             self.snake.grow()
             self.spawnApple()
@@ -38,6 +48,8 @@ class Grid:
             print('Snake hit himself')
         else :
             Timer(self.tickInterval,self.onTick).start()
+
+        self.refreshGrid()
 
 
     def printGrind(self) :
@@ -54,4 +66,42 @@ class Grid:
             line += '|'
             print(line)
         print('+'+'-'*self.sizeX+'+')
+
+    #tkinter to draw the grid
+    def drawGrid(self) :
+        root = Tk()
+        root.title('Snake')
+        root.resizable(False,False)
+        root.geometry('{}x{}'.format(self.XGridSize,self.YGridSize))
+        #root.bind('<Key>',self.onKeyPress)
+
+        self.canvas = Canvas(root,width=self.XGridSize,height=self.YGridSize)
+        self.canvas.pack()
+        self.canvas.create_rectangle(0,0,self.XGridSize,self.YGridSize,fill='black')
+        self.drawSnake()
+        self.drawApple()
+        self.drawScore()
+
+        Timer(self.tickInterval,self.onTick).start()
+
+        root.mainloop()
+
+
+    def refreshGrid(self) :
+        self.canvas.delete('all')
+        self.canvas.create_rectangle(0,0,self.XGridSize,self.YGridSize,fill='black')
+        self.drawSnake()
+        self.drawApple()
+        self.drawScore()
+
+    def drawSnake(self) :
+        for x,y in self.snake.getOccupiedSquares() :
+            self.canvas.create_rectangle(x*self.squareSize,y*self.squareSize,x*self.squareSize+self.squareSize,y*self.squareSize+self.squareSize,fill='green')
+        
+    def drawApple(self) :
+        self.canvas.create_rectangle(self.appleX*self.squareSize,self.appleY*self.squareSize,self.appleX*self.squareSize+self.squareSize,self.appleY*self.squareSize+self.squareSize,fill='red')
+
+    def drawScore(self) :
+        self.canvas.create_text(50,20,fill='white',font='Times 20',text='Score: '+str(self.snake.score))
+        
 
