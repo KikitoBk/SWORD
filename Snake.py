@@ -10,7 +10,8 @@ class Snake :
         self._bodyParts = [Body(x,y+l+1) for l in range(length)]
         self.actualDirection = self.DIRECTION.UP
         self.nextDirection = self.DIRECTION.UP
-        self._lastRemoved = Body(x,y+length+1)
+        self.lastRemoved = Body(x,y+length+1)
+
         self.score = 0
 
         def on_press(key) :
@@ -30,8 +31,9 @@ class Snake :
     
     def onTick(self) : 
         self._bodyParts.insert(0,Body(self.x,self.y))
-        self._lastRemoved = self._bodyParts.pop()
+        self.lastRemoved = self._bodyParts.pop()
         if(self.nextDirection == self.DIRECTION.LEFT) :
+
             self.x -= 1
         elif(self.nextDirection == self.DIRECTION.UP) :
             self.y -= 1
@@ -42,7 +44,7 @@ class Snake :
         self.actualDirection = self.nextDirection
     
     def grow(self) :
-        self._bodyParts.append(self._lastRemoved)
+        self._bodyParts.append(self.lastRemoved)
         self.score += 1
 
 
