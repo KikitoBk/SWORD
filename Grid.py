@@ -2,79 +2,63 @@ from Snake import Snake
 from random import randint
 from threading import Timer
 from tkinter import *
-from tkinter import messagebox
 
 class Grid:
-    def __init__(self,sizeX,sizeY,tickInterval):
+    def __init__(self,sizeX,sizeY,tickInterval,snakes):
         self.sizeX = sizeX
         self.sizeY = sizeY
         self.squareSize = 10
         self.XGridSize = sizeX * self.squareSize
         self.YGridSize = sizeY * self.squareSize
-        self.snake = Snake(sizeX//2,sizeY//2,3)
-        self.snake2 = Snake(sizeX//3,sizeY//3,3)
+        self.snakes = snakes
         self.spawnApple()
         self.tickInterval = tickInterval
         self.drawGrid()
-        
-        
 
-    def spawnApple(self): 
-        occupiedSquare = self.snake.getOccupiedSquares()
+    def spawnApple(self,x=None,y=None): 
+        occupiedSquares = []
+        for snake in self.snakes :
+            occupiedSquares.extend(snake.getOccupiedSquares())
 
-        self.appleX = randint(0,self.sizeX-1)
-        self.appleY = randint(0,self.sizeY-1)
-
-        while((self.appleX,self.appleY) in occupiedSquare) :
+        if(x==None and y==None) :
             self.appleX = randint(0,self.sizeX-1)
             self.appleY = randint(0,self.sizeY-1)
 
-
-
-
-        
-    def onTick(self) :
-        self.snake.onTick()
-        #print(self.snake.getOccupiedSquares())
-        #self.printGrind()
-        
-        if(self.snake.x == self.appleX and self.snake.y == self.appleY) :
-            self.snake.grow()
-            self.spawnApple()
-            
-        if(self.snake.x < 0 or self.snake.y < 0 or self.snake.x > self.sizeX or self.snake.y > self.sizeY) :
-            print('Snake hit a wall')
-        elif((self.snake.x,self.snake.y) in self.snake.getTailSquares()) :
-            print('Snake hit himself')
+            while((self.appleX,self.appleY) in occupiedSquares) :
+                self.appleX = randint(0,self.sizeX-1)
+                self.appleY = randint(0,self.sizeY-1)
         else :
-            Timer(self.tickInterval,self.onTick).start()
+            if((x,y) not in occupiedSquares) :
+                self.appleX = x
+                self.appleY = y
+            else :
+                self.spawnApple()
+
+    def onTick(self) :
+        shouldStop = False
+        for snake in self.snakes :
+            snake.onTick()
+        
+            if(snake.x == self.appleX and snake.y == self.appleY) :
+                snake.grow()
+                self.spawnApple()
+                
+            if(snake.x < 0 or snake.y < 0 or snake.x > self.sizeX or snake.y > self.sizeY) :
+                print('Snake hit a wall')
+            elif((snake.x,snake.y) in snake.getTailSquares()) :
+                print('Snake hit himself')
+            else :
+                shouldStop = True
 
         self.refreshGrid()
+        if(not(shouldStop)):
+            Timer(self.tickInterval,self.onTick).start()
 
-
-    def printGrind(self) :
-        print('+'+'-'*self.sizeX+'+')
-        for y in range(self.sizeY) :
-            line = '|'
-            for x in range(self.sizeX) :
-                if((x,y) in self.snake.getOccupiedSquares()) :
-                    line += 'O'
-                elif(x == self.appleX and y == self.appleY) :
-                    line += 'A'
-                else :
-                    line += ' '
-            line += '|'
-            print(line)
-        print('+'+'-'*self.sizeX+'+')
-
-    #tkinter to draw the grid
     def drawGrid(self) :
         root = Tk()
         root.title('Snake')
         root.resizable(False,False)
         root.geometry('{}x{}'.format(self.XGridSize,self.YGridSize))
-        #root.bind('<Key>',self.onKeyPress)
-
         self.canvas = Canvas(root,width=self.XGridSize,height=self.YGridSize)
         self.canvas.pack()
         self.canvas.create_rectangle(0,0,self.XGridSize,self.YGridSize,fill='black')
@@ -83,9 +67,7 @@ class Grid:
         self.drawScore()
 
         Timer(self.tickInterval,self.onTick).start()
-
         root.mainloop()
-
 
     def refreshGrid(self) :
         self.canvas.delete('all')
