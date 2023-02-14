@@ -46,3 +46,4 @@ class Direction(Enum):
     UP = 'z'
     RIGHT = 'd'
     DOWN = 's'
+
