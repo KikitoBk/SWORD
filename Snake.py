@@ -10,8 +10,9 @@ class Snake :
         self._lastRemoved = Body(x,y+length+1)
 
         def on_press(key) :
-            if(key==Direction.LEFT.value or key==Direction.RIGHT.value or key==Direction.UP.value or key==Direction.DOWN.value) :
-                self.turn(Direction(key))
+            charKey = key.char
+            if(charKey==Direction.LEFT.value or charKey==Direction.RIGHT.value or charKey==Direction.UP.value or charKey==Direction.DOWN.value) :
+                self.turn(Direction(charKey))
 
         #Listen to keyboard inputs
         listeners = keyboard.Listener(on_press=on_press)
@@ -39,6 +40,7 @@ class Snake :
         self._bodyParts.append(self._lastRemoved)
 
     def turn(self,direction) :
+        print('turning',direction)
         self.direction = direction
 
 class Direction(Enum):
