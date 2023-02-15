@@ -5,9 +5,12 @@ from pynput import keyboard
 class Snake :
     def __init__(self,id,x,y,length,color='green',leftKey='q',rightKey='d',upKey='z',downKey='s'):
         self.id = id
-        self.x = x
-        self.y = y
+        self.xinit = x
+        self.yinit = y
+        self.x = self.xinit
+        self.y = self.yinit
         self.color = color
+        self.lengthinit = length
         self.DIRECTION = Enum('Direction',{'LEFT':leftKey,'RIGHT':rightKey,'UP':upKey,'DOWN':downKey})
         self._bodyParts = [Body(x,y+l+1) for l in range(length)]
         self.actualDirection = self.DIRECTION.UP
@@ -54,6 +57,16 @@ class Snake :
         #check if we can turn (not opposite direction)
         if(not( ((self.actualDirection == self.DIRECTION.DOWN) and (direction == self.DIRECTION.UP)) or ((self.actualDirection == self.DIRECTION.UP) and (direction == self.DIRECTION.DOWN)) or ((self.actualDirection == self.DIRECTION.RIGHT) and (direction == self.DIRECTION.LEFT)) or ((self.actualDirection == self.DIRECTION.LEFT) and (direction == self.DIRECTION.RIGHT)) ) ):
             self.nextDirection = direction
+
+    def reset(self):
+        self.x = self.xinit
+        self.y = self.yinit
+        self._bodyParts = [Body(self.x,self.y+l+1) for l in range(self.lengthinit)]
+        self.actualDirection = self.DIRECTION.UP
+        self.nextDirection = self.DIRECTION.UP
+        self.lastRemoved = Body(self.x,self.y+self.lengthinit+1)
+        self.length = self.lengthinit
+        self.score = 0
 
 # class Direction(Enum):
 #     LEFT = 'q'

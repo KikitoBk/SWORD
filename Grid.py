@@ -67,26 +67,50 @@ class Grid:
             else :
                 shouldStop |= False
 
+
+
             self.refreshSnake(snake)
 
         if(not(shouldStop)):
             Timer(self.tickInterval,self.onTick).start()
 
+        else :
+            #window score print and replay button
+            self.canvas.create_rectangle(0,0,self.XGridSize,self.YGridSize,fill='black',tag='score')
+            self.canvas.create_text(self.XGridSize/2,self.YGridSize//3-50,fill='white',font=('Times',self.squareSize if self.squareSize > 10 else 10),text='Click to Replay',tags=('score','score_'+snake.id),width=200,anchor='center')
+            for i,snake in enumerate(self.snakes) :
+                Label(self.root,text="score of player "+snake.id+" : "+str(snake.score),wraplength=0,bg='black',fg='white',anchor='center',font=('Times',self.squareSize if self.squareSize > 10 else 10)).place(x=20,y=self.YGridSize//3+50*i)
+                #self.canvas.create_text(self.XGridSize//3,self.YGridSize//3+50*i,fill='white',font=('Times',self.squareSize if self.squareSize > 10 else 10),text="score of player "+snake.id+" : "+str(snake.score),width=None,tags=('score','score_'+snake.id),anchor='center')
+
+            self.canvas.tag_raise('score')
+            self.canvas.bind('<Button-1>',self.replay)
+            
+        
         #put score in first plan
         self.canvas.tag_raise('score')
 
+    def replay(self,event):
+        self.root.destroy()
+        for snake in self.snakes :
+            snake.reset()
+        self.__init__(self.sizeX,self.sizeY,self.tickInterval,self.snakes)
+        
+        
+
     def drawGrid(self) :
-        root = Tk()
-        root.title('SWORD')
-        root.resizable(False,False)
-        root.geometry('{}x{}'.format(self.XGridSize,self.YGridSize))
-        self.canvas = Canvas(root,width=self.XGridSize,height=self.YGridSize,bg='black')
+        self.root = Tk()
+        self.root.focus_force()
+
+        self.root.title('SWORD')
+        self.root.resizable(False,False)
+        self.root.geometry('{}x{}+{}+{}'.format(self.XGridSize,self.YGridSize,20,20))
+        self.canvas = Canvas(self.root,width=self.XGridSize,height=self.YGridSize,bg='black')
         self.canvas.pack()
         for snake in self.snakes :
             self.drawSnake(snake)
         self.drawApple()
         Timer(self.tickInterval,self.onTick).start()
-        root.mainloop()
+        self.root.mainloop()
 
     # Draw the entire snake
     def drawSnake(self,snake) :
