@@ -2,7 +2,7 @@ from Snake import Snake
 from random import randint
 from threading import Timer
 from tkinter import *
-# TODO collision entre snake
+
 class Grid:
     def __init__(self,sizeX,sizeY,tickInterval,snakes):
         self.sizeX = sizeX
@@ -35,9 +35,13 @@ class Grid:
 
     def onTick(self) :
         shouldStop = False
+        allTailSquares = []
         for snake in self.snakes :
             snake.onTick()
-        
+            allTailSquares += snake.getTailSquares()
+        allHeadSquares = [(snake.x,snake.y) for snake in self.snakes]
+        for snake in self.snakes :
+            
             # Checking apple
             if(snake.x == self.appleX and snake.y == self.appleY) :
                 snake.grow()
@@ -47,15 +51,18 @@ class Grid:
                 
             # Checking collision with wall
             if(snake.x < 0 or snake.y < 0 or snake.x > self.sizeX or snake.y > self.sizeY) :
-                print('Snake hit a wall')
+                print(snake.id+' hit a wall')
                 shouldStop |= True 
 
-            # Checking collision with himself
-            elif((snake.x,snake.y) in snake.getTailSquares()) :
-                print('Snake hit himself')
+            # Checking collision with snakes tails
+            elif((snake.x,snake.y) in allTailSquares) :
+                print(snake.id+' hit a snake tail')
                 shouldStop |= True
-
-            # TODO Checking collsion with others
+            
+            # Checking collision with head
+            elif(allHeadSquares.count((snake.x,snake.y))>=2) :
+                print(snake.id+' hit someoneelse head')
+                shouldStop |= True  
             
             else :
                 shouldStop |= False
@@ -70,7 +77,7 @@ class Grid:
 
     def drawGrid(self) :
         root = Tk()
-        root.title('Snake')
+        root.title('SWORD')
         root.resizable(False,False)
         root.geometry('{}x{}'.format(self.XGridSize,self.YGridSize))
         self.canvas = Canvas(root,width=self.XGridSize,height=self.YGridSize,bg='black')
@@ -84,15 +91,15 @@ class Grid:
     # Draw the entire snake
     def drawSnake(self,snake) :
         for x,y in snake.getOccupiedSquares() :
-            self.canvas.create_rectangle(x*self.squareSize,y*self.squareSize,x*self.squareSize+self.squareSize,y*self.squareSize+self.squareSize,fill=snake.color,tag=(str(snake.x)+','+str(snake.y)))
+            self.canvas.create_rectangle(x*self.squareSize,y*self.squareSize,x*self.squareSize+self.squareSize,y*self.squareSize+self.squareSize,fill=snake.color,tag=snake.id+':'+str(x)+','+str(y))
         self.canvas.create_text(snake.x*self.squareSize,snake.y*self.squareSize,fill='white',font=('Times',self.squareSize if self.squareSize > 10 else 10),text=str(self.snakes[0].score),tags=('score','score_'+snake.id),width=50,anchor='w')
         
     # Only remove the last part of the snake and draw the head
     def refreshSnake(self,snake) :  
         # Last body part
-        self.canvas.delete(str(snake.lastRemoved.x)+','+str(snake.lastRemoved.y))
+        self.canvas.delete(snake.id+':'+str(snake.lastRemoved.x)+','+str(snake.lastRemoved.y))
         # Head
-        self.canvas.create_rectangle(snake.x*self.squareSize,snake.y*self.squareSize,snake.x*self.squareSize+self.squareSize,snake.y*self.squareSize+self.squareSize,fill=snake.color,tag=(str(snake.x)+','+str(snake.y)))
+        self.canvas.create_rectangle(snake.x*self.squareSize,snake.y*self.squareSize,snake.x*self.squareSize+self.squareSize,snake.y*self.squareSize+self.squareSize,fill=snake.color,tag=snake.id+':'+str(snake.x)+','+str(snake.y))
         self.canvas.move('score_'+snake.id,(snake.x-snake._bodyParts[0].x)*self.squareSize,(snake.y-snake._bodyParts[0].y)*self.squareSize)
 
     def drawApple(self) :
