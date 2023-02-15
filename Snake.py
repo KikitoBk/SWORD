@@ -3,9 +3,10 @@ from enum import Enum
 from pynput import keyboard
 
 class Snake :
-    def __init__(self,x,y,length,leftKey='q',rightKey='d',upKey='z',downKey='s'):
+    def __init__(self,x,y,length,color='green',leftKey='q',rightKey='d',upKey='z',downKey='s'):
         self.x = x
         self.y = y
+        self.color = color
         self.DIRECTION = Enum('Direction',{'LEFT':leftKey,'RIGHT':rightKey,'UP':upKey,'DOWN':downKey})
         self._bodyParts = [Body(x,y+l+1) for l in range(length)]
         self.actualDirection = self.DIRECTION.UP
