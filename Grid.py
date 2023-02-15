@@ -33,7 +33,6 @@ class Grid:
             else :
                 self.spawnApple()
 
-
     def onTick(self) :
         shouldStop = False
         for snake in self.snakes :
@@ -42,7 +41,7 @@ class Grid:
             # Checking apple
             if(snake.x == self.appleX and snake.y == self.appleY) :
                 snake.grow()
-                self.canvas.itemconfig('score',text='Score: '+str(snake.score))
+                self.canvas.itemconfig('score',text=str(snake.score))
                 self.spawnApple()
                 self.drawApple()
                 
@@ -69,39 +68,33 @@ class Grid:
         #put score in first plan
         self.canvas.tag_raise('score')
 
-        self.canvas.update()
-
     def drawGrid(self) :
         root = Tk()
         root.title('Snake')
         root.resizable(False,False)
         root.geometry('{}x{}'.format(self.XGridSize,self.YGridSize))
-        self.canvas = Canvas(root,width=self.XGridSize,height=self.YGridSize)
+        self.canvas = Canvas(root,width=self.XGridSize,height=self.YGridSize,bg='black')
         self.canvas.pack()
-        self.canvas.create_rectangle(0,0,self.XGridSize,self.YGridSize,fill='black')
         for snake in self.snakes :
             self.drawSnake(snake)
         self.drawApple()
-        self.drawScore()
         Timer(self.tickInterval,self.onTick).start()
         root.mainloop()
 
-
-    def refreshSnake(self,snake) :
-        
-        #erase the last part of the snake via lastremove
-        self.canvas.create_rectangle(snake.lastRemoved.x*self.squareSize,snake.lastRemoved.y*self.squareSize,snake.lastRemoved.x*self.squareSize+self.squareSize,snake.lastRemoved.y*self.squareSize+self.squareSize,fill='black')
-        #draw the head of the snake
-        self.canvas.create_rectangle(snake.x*self.squareSize,snake.y*self.squareSize,snake.x*self.squareSize+self.squareSize,snake.y*self.squareSize+self.squareSize,fill='green')
-
+    # Draw the entire snake
     def drawSnake(self,snake) :
         for x,y in snake.getOccupiedSquares() :
-            self.canvas.create_rectangle(x*self.squareSize,y*self.squareSize,x*self.squareSize+self.squareSize,y*self.squareSize+self.squareSize,fill='green')
+            self.canvas.create_rectangle(x*self.squareSize,y*self.squareSize,x*self.squareSize+self.squareSize,y*self.squareSize+self.squareSize,fill=snake.color,tag=(str(snake.x)+','+str(snake.y)))
+        self.canvas.create_text(snake.x*self.squareSize,snake.y*self.squareSize,fill='white',font=('Times',10),text=str(self.snakes[0].score),tags=('score'),width=50,anchor='w')
         
+    # Only remove the last part of the snake and draw the head
+    def refreshSnake(self,snake) :  
+        # Last body part
+        self.canvas.delete(str(snake.lastRemoved.x)+','+str(snake.lastRemoved.y))
+        # Head
+        self.canvas.create_rectangle(snake.x*self.squareSize,snake.y*self.squareSize,snake.x*self.squareSize+self.squareSize,snake.y*self.squareSize+self.squareSize,fill=snake.color,tag=(str(snake.x)+','+str(snake.y)))
+        self.canvas.move('score',(snake.x-snake._bodyParts[0].x)*self.squareSize,(snake.y-snake._bodyParts[0].y)*self.squareSize)
+
     def drawApple(self) :
-        self.canvas.create_rectangle(self.appleX*self.squareSize,self.appleY*self.squareSize,self.appleX*self.squareSize+self.squareSize,self.appleY*self.squareSize+self.squareSize,fill='red')
-
-    def drawScore(self) :
-        self.textScore = self.canvas.create_text(50,20,fill='white',font='Times 20',text='Score: '+str(self.snakes[0].score),tag='score',width=200)
-        
-
+        self.canvas.delete('apple')
+        self.canvas.create_rectangle(self.appleX*self.squareSize,self.appleY*self.squareSize,self.appleX*self.squareSize+self.squareSize,self.appleY*self.squareSize+self.squareSize,fill='red',tag='apple')
