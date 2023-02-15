@@ -20,9 +20,10 @@ class Snake :
         self.score = 0
 
         def on_press(key) :
-            charKey = key.char
-            if(charKey==self.DIRECTION.LEFT.value or charKey==self.DIRECTION.RIGHT.value or charKey==self.DIRECTION.UP.value or charKey==self.DIRECTION.DOWN.value) :
-                self.turn(self.DIRECTION(charKey))
+            if hasattr(key, 'char'):
+                charKey = key.char
+                if(charKey==self.DIRECTION.LEFT.value or charKey==self.DIRECTION.RIGHT.value or charKey==self.DIRECTION.UP.value or charKey==self.DIRECTION.DOWN.value) :
+                    self.turn(self.DIRECTION(charKey))
 
         #Listen to keyboard inputs
         listeners = keyboard.Listener(on_press=on_press)
