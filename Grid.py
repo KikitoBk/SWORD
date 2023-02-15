@@ -2,12 +2,12 @@ from Snake import Snake
 from random import randint
 from threading import Timer
 from tkinter import *
-
+# TODO collision entre snake
 class Grid:
     def __init__(self,sizeX,sizeY,tickInterval,snakes):
         self.sizeX = sizeX
         self.sizeY = sizeY
-        self.squareSize = 10
+        self.squareSize = 20
         self.XGridSize = sizeX * self.squareSize
         self.YGridSize = sizeY * self.squareSize
         self.snakes = snakes
@@ -41,7 +41,7 @@ class Grid:
             # Checking apple
             if(snake.x == self.appleX and snake.y == self.appleY) :
                 snake.grow()
-                self.canvas.itemconfig('score',text=str(snake.score))
+                self.canvas.itemconfig('score_'+snake.id,text=str(snake.score))
                 self.spawnApple()
                 self.drawApple()
                 
@@ -85,7 +85,7 @@ class Grid:
     def drawSnake(self,snake) :
         for x,y in snake.getOccupiedSquares() :
             self.canvas.create_rectangle(x*self.squareSize,y*self.squareSize,x*self.squareSize+self.squareSize,y*self.squareSize+self.squareSize,fill=snake.color,tag=(str(snake.x)+','+str(snake.y)))
-        self.canvas.create_text(snake.x*self.squareSize,snake.y*self.squareSize,fill='white',font=('Times',10),text=str(self.snakes[0].score),tags=('score'),width=50,anchor='w')
+        self.canvas.create_text(snake.x*self.squareSize,snake.y*self.squareSize,fill='white',font=('Times',self.squareSize if self.squareSize > 10 else 10),text=str(self.snakes[0].score),tags=('score','score_'+snake.id),width=50,anchor='w')
         
     # Only remove the last part of the snake and draw the head
     def refreshSnake(self,snake) :  
@@ -93,7 +93,7 @@ class Grid:
         self.canvas.delete(str(snake.lastRemoved.x)+','+str(snake.lastRemoved.y))
         # Head
         self.canvas.create_rectangle(snake.x*self.squareSize,snake.y*self.squareSize,snake.x*self.squareSize+self.squareSize,snake.y*self.squareSize+self.squareSize,fill=snake.color,tag=(str(snake.x)+','+str(snake.y)))
-        self.canvas.move('score',(snake.x-snake._bodyParts[0].x)*self.squareSize,(snake.y-snake._bodyParts[0].y)*self.squareSize)
+        self.canvas.move('score_'+snake.id,(snake.x-snake._bodyParts[0].x)*self.squareSize,(snake.y-snake._bodyParts[0].y)*self.squareSize)
 
     def drawApple(self) :
         self.canvas.delete('apple')

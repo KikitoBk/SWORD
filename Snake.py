@@ -3,7 +3,8 @@ from enum import Enum
 from pynput import keyboard
 
 class Snake :
-    def __init__(self,x,y,length,color='green',leftKey='q',rightKey='d',upKey='z',downKey='s'):
+    def __init__(self,id,x,y,length,color='green',leftKey='q',rightKey='d',upKey='z',downKey='s'):
+        self.id = id
         self.x = x
         self.y = y
         self.color = color
