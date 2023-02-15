@@ -5,8 +5,8 @@ from tkinter import *
 
 class Grid:
     def __init__(self,sizeX,sizeY,tickInterval,snakes):
-        self.sizeX = sizeX
-        self.sizeY = sizeY
+        self.sizeX = sizeX -1
+        self.sizeY = sizeY -1
         self.squareSize = 20
         self.XGridSize = sizeX * self.squareSize
         self.YGridSize = sizeY * self.squareSize
@@ -93,7 +93,7 @@ class Grid:
         self.root.destroy()
         for snake in self.snakes :
             snake.reset()
-        self.__init__(self.sizeX,self.sizeY,self.tickInterval,self.snakes)
+        self.__init__(self.sizeX+1,self.sizeY+1,self.tickInterval,self.snakes)
         
         
 
