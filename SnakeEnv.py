@@ -4,54 +4,42 @@ from random import randint
 
 class SnakeEnv : 
     def __init__(self,sizeX,sizeY,snakes):
-        self.sizeX = sizeX
-        self.sizeY = sizeY
+        self.sizeX = sizeX -1
+        self.sizeY = sizeY -1
         self.squareSize = 20
         self.XGridSize = sizeX * self.squareSize
         self.YGridSize = sizeY * self.squareSize
         self.snakes = snakes
         self.done = False
-        self.spawnApple()
+        self._spawnApple()
         self._displayWindow()
     
     def reset(self):
         self.root.destroy()
         for snake in self.snakes :
             snake.reset()
-        self.__init__(self.sizeX,self.sizeY,self.snakes)
+        self.__init__(self.sizeX+1,self.sizeY+1,self.snakes)
         
-    def step(self,action):
-        allTailSquares = []
+    def step(self,actions):
+        #Applying actions
         for snake in self.snakes :
-            if(snake.id == action.id) :
-                snake.step(action.direction)    
-            allTailSquares += snake.getTailSquares()
-        allHeadSquares = [(snake.x,snake.y) for snake in self.snakes]
-        
+            for action in actions : 
+                if(snake.id == action.id) :
+                    snake.step(action.direction)    
+            
         for snake in self.snakes :
             
             # Checking apple
             if(snake.x == self.appleX and snake.y == self.appleY) :
                 snake.grow()
                 self.canvas.itemconfig('score_'+snake.id,text=str(snake.score))
-                self.spawnApple()
+                self._spawnApple()
                 self._refreshApple()
                 reward = 1
                 
-            # Checking collision with wall
-            if(snake.x < 0 or snake.y < 0 or snake.x > self.sizeX or snake.y > self.sizeY) :
-                self.done = True
-                reward = -1
-
-            # Checking collision with snakes tails
-            elif((snake.x,snake.y) in allTailSquares) :
-                self.done = True
-                reward = -1
-            
-            # Checking collision with head
-            elif(allHeadSquares.count((snake.x,snake.y))>=2) :
-                self.done = True
-                reward = -1 
+                if(self._isColliding(snake)) :
+                    self.done = True
+                    reward = -1
             
             else :
                 reward = 0
@@ -61,20 +49,21 @@ class SnakeEnv :
      
     
     def render(self):
-        # self._refreshApple()
-        # for snake in self.snakes :
-        #     self._refreshSnake(snake)
         self.canvas.tag_raise('score')
         self.root.update_idletasks()
         self.root.update()
     
     def _getObservations(self) :
-        
-        
         state = [
             # TODO 
+
+
             # Actual direction
-            
+            self.snakes[0].direction == 'UP',
+            self.snakes[0].direction == 'DOWN',
+            self.snakes[0].direction == 'LEFT',
+            self.snakes[0].direction == 'RIGHT',
+
             #Apple location 
             self.snakes[0].x > self.appleX,
             self.snakes[0].x > self.appleX,
@@ -82,6 +71,26 @@ class SnakeEnv :
             self.snakes[0].y < self.appleY  
         ]
     
+    def _isColliding(self,snake) :
+        allTailSquares = []
+        for snake in self.snakes :
+            allTailSquares += snake.getTailSquares()
+        allHeadSquares = [(snake.x,snake.y) for snake in self.snakes]
+
+        # Checking collision with wall
+        if(snake.x < 0 or snake.y < 0 or snake.x > self.sizeX or snake.y > self.sizeY) :
+            return True
+
+        # Checking collision with snakes tails
+        if((snake.x,snake.y) in allTailSquares) :
+            return True
+
+        # Checking collision with head
+        if (allHeadSquares.count((snake.x,snake.y))>=2) :
+            return True
+        
+        return False
+
     def _displayWindow(self) :
         self.root = Tk()
         self.root.focus_force()
@@ -91,9 +100,10 @@ class SnakeEnv :
         self.root.geometry('{}x{}+{}+{}'.format(self.XGridSize,self.YGridSize,20,20))
         self.canvas = Canvas(self.root,width=self.XGridSize,height=self.YGridSize,bg='black')
         self.canvas.pack()
+        self._refreshApple()
         for snake in self.snakes :
             self._drawSnake(snake)
-        Timer(self.tickInterval,self.onTick).start()
+        # Timer(self.tickInterval,self.onTick).start()
         self.root.update_idletasks()
         self.root.update()
         

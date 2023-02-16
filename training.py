@@ -1,16 +1,16 @@
 import numpy as np
+from Snake import Snake
 from SnakeEnv import SnakeEnv
 from DQNAgent import DQNAgent
 
 # Create the Snake game environment
-env = SnakeEnv()
+env = SnakeEnv(30,30,[Snake('AI',15,15,3)])
 
 # Set the state size and action size
 state_size = env.observation_space.shape[0]
-action_size = env.action_space.n
 
 # Create the DQN agent
-agent = DQNAgent(state_size, action_size)
+agent = DQNAgent(state_size, 3)
 
 # Train the agent
 num_episodes = 1000

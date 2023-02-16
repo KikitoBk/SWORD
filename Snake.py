@@ -3,7 +3,7 @@ from enum import Enum
 from pynput import keyboard
 
 class Snake :
-    def __init__(self,id,x,y,length,color='green',leftKey='q',rightKey='d',upKey='z',downKey='s'):
+    def __init__(self,id,x,y,length,color='green'):
         self.id = id
         self.xinit = x
         self.yinit = y
@@ -25,15 +25,19 @@ class Snake :
     def step(self,action) :
         self._bodyParts.insert(0,Body(self.x,self.y))
         self.lastRemoved = self._bodyParts.pop()
-        if(action == 'UP' and self.direction != 'DOWN') :
-            self.y -= 1
-        elif(action == 'DOWN' and self.direction != 'UP') :
-            self.y += 1
-        elif(action == 'LEFT' and self.direction != 'RIGHT') :
-            self.x -= 1
-        elif(action == 'RIGHT' and self.direction != 'LEFT') :
-            self.x += 1
-    
+
+        directions = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
+        dx, dy = directions.get(self.direction)
+        ax, ay = directions.get(action)
+        
+        if (ax,ay) != (-dx,-dy)  :
+            self.x += ax
+            self.y += ay
+            self.direction = action
+        else :
+            self.x += dx
+            self.y += dy
+
     def grow(self) :
         self._bodyParts.append(self.lastRemoved)
         self.score += 1
@@ -42,8 +46,7 @@ class Snake :
         self.x = self.xinit
         self.y = self.yinit
         self._bodyParts = [Body(self.x,self.y+l+1) for l in range(self.lengthinit)]
-        self.actualDirection = self.DIRECTION.UP
-        self.nextDirection = self.DIRECTION.UP
+        self.direction = 'UP'
         self.lastRemoved = Body(self.x,self.y+self.lengthinit+1)
         self.length = self.lengthinit
         self.score = 0
