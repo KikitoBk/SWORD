@@ -56,10 +56,19 @@ class SnakeEnv :
     def _getObservations(self) :
 
         directions = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
+        x,y = self.snakes[0].x,self.snakes[0].y
+        dx,dy = directions[self.snakes[0].direction]
 
         observation = [
             # TODO 
-#left danger
+            #nearest left danger
+            self._nearestDanger(x,y,-dy,dx),
+                       
+            #nearest forward danger
+            self._nearestDanger(x,y,dx,dy),
+
+            #nearest right danger
+            self._nearestDanger(x,y,dy,-dx),
 
             # Actual direction
             self.snakes[0].direction == 'UP',
