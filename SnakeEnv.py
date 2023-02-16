@@ -1,6 +1,7 @@
 from threading import Timer
 from tkinter import *
 from random import randint
+import math
 
 class SnakeEnv : 
     def __init__(self,sizeX,sizeY,snakes):
@@ -36,13 +37,14 @@ class SnakeEnv :
                 self.canvas.itemconfig('score_'+snake.id,text=str(snake.score))
                 self._spawnApple()
                 self._refreshApple()
-                reward.append(2)
+                
+                reward.append(10)
                 
             if(self._isColliding(snake.x,snake.y)) :
                 self.done |= True
-                reward.append(-1)
+                reward.append(-11)
             else :
-                reward.append(0)
+                reward.append(self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY)*10/self._getMaxDistance())
 
         return self._getObservations(),reward[0],self.done, {}
      
@@ -112,6 +114,12 @@ class SnakeEnv :
         else :
             return self._nearestDanger(baseX+deltaX,baseY+deltaY,deltaX,deltaY) + 1
 
+    def _distanceFrom(self,sourceX,sourceY,targetX,targetY) :
+        return abs(targetX - sourceX) + abs(targetY - sourceY)
+    
+    def _getMaxDistance(self) :
+        return math.sqrt(pow(self.sizeX,2)+pow(self.sizeY,2))
+    
     def _displayWindow(self) :
         self.root = Tk()
         self.root.focus_force()
