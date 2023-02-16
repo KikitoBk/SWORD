@@ -19,7 +19,7 @@ class PlayerAgent (Agent):
 
     def _on_press(self,key) :
         if hasattr(key, 'char'):
-            self.direction = self.keyBinding.get(key.char)
+            self.direction = self.keyBinding.get(key.char,self.direction)
 
     def getAction(self):
         return Action(self.id,self.direction)

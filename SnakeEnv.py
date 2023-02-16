@@ -23,11 +23,11 @@ class SnakeEnv :
     def step(self,actions):
         #Applying actions
         for snake in self.snakes :
+            
             for action in actions : 
                 if(snake.id == action.id) :
-                    snake.step(action.direction)    
-            
-        for snake in self.snakes :
+                    snake.step(action.direction)
+        for i,snake in enumerate(self.snakes) :
             
             # Checking apple
             if(snake.x == self.appleX and snake.y == self.appleY) :
@@ -37,9 +37,9 @@ class SnakeEnv :
                 self._refreshApple()
                 reward = 1
                 
-                if(self._isColliding(snake)) :
-                    self.done = True
-                    reward = -1
+            if(self._isColliding(snake.x,snake.y)) :
+                self.done = True
+                reward = -1
             
             else :
                 reward = 0
@@ -54,9 +54,12 @@ class SnakeEnv :
         self.root.update()
     
     def _getObservations(self) :
-        state = [
-            # TODO 
 
+        directions = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
+
+        observation = [
+            # TODO 
+#left danger
 
             # Actual direction
             self.snakes[0].direction == 'UP',
@@ -71,25 +74,30 @@ class SnakeEnv :
             self.snakes[0].y < self.appleY  
         ]
     
-    def _isColliding(self,snake) :
+    def _isColliding(self,x,y) :
         allTailSquares = []
         for snake in self.snakes :
             allTailSquares += snake.getTailSquares()
         allHeadSquares = [(snake.x,snake.y) for snake in self.snakes]
-
         # Checking collision with wall
-        if(snake.x < 0 or snake.y < 0 or snake.x > self.sizeX or snake.y > self.sizeY) :
+        if(x < 0 or y < 0 or x > self.sizeX or y > self.sizeY) :
             return True
 
         # Checking collision with snakes tails
-        if((snake.x,snake.y) in allTailSquares) :
+        if((x,y) in allTailSquares) :
             return True
 
         # Checking collision with head
-        if (allHeadSquares.count((snake.x,snake.y))>=2) :
+        if (allHeadSquares.count((x,y))>=2) :
             return True
         
         return False
+
+    def _nearestDanger(self,baseX,baseY,deltaX,deltaY) :
+        if (self._isColliding(baseX,baseY)) :
+            return 0
+        else :
+            return self._nearestDanger(self,baseX+deltaX,baseY+deltaY,deltaX,deltaY) + 1
 
     def _displayWindow(self) :
         self.root = Tk()
@@ -111,7 +119,7 @@ class SnakeEnv :
     def _drawSnake(self,snake) :
         for x,y in snake.getOccupiedSquares() :
             self.canvas.create_rectangle(x*self.squareSize,y*self.squareSize,x*self.squareSize+self.squareSize,y*self.squareSize+self.squareSize,fill=snake.color,tag=snake.id+':'+str(x)+','+str(y))
-        self.canvas.create_text(snake.x*self.squareSize,snake.y*self.squareSize,fill='white',font=('Times',self.squareSize if self.squareSize > 10 else 10),text=str(self.snakes[0].score),tags=('score','score_'+snake.id),width=50,anchor='w')
+        self.canvas.create_text(snake.x*self.squareSize,snake.y*self.squareSize,fill='white',font=('Times',self.squareSize if self.squareSize > 10 else 10),text=str(snake.score),tags=('score','score_'+snake.id),width=50,anchor='w')
         
     # Only remove the last part of the snake and draw the head
     def _refreshSnake(self,snake) :  
