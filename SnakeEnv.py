@@ -36,7 +36,7 @@ class SnakeEnv :
                 self.canvas.itemconfig('score_'+snake.id,text=str(snake.score))
                 self._spawnApple()
                 self._refreshApple()
-                reward.append(1)
+                reward.append(2)
                 
             if(self._isColliding(snake.x,snake.y)) :
                 self.done |= True
