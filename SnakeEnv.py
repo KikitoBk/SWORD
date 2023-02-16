@@ -23,32 +23,31 @@ class SnakeEnv :
     def step(self,actions):
         #Applying actions
         for snake in self.snakes :
-            
             for action in actions : 
                 if(snake.id == action.id) :
                     snake.step(action.direction)
-        for i,snake in enumerate(self.snakes) :
-            
+        reward = []
+        for snake in self.snakes :
             # Checking apple
             if(snake.x == self.appleX and snake.y == self.appleY) :
                 snake.grow()
                 self.canvas.itemconfig('score_'+snake.id,text=str(snake.score))
                 self._spawnApple()
                 self._refreshApple()
-                reward = 1
+                reward.append(1)
                 
             if(self._isColliding(snake.x,snake.y)) :
-                self.done = True
-                reward = -1
-            
+                self.done |= True
+                reward.append(-1)
             else :
-                reward = 0
+                reward.append(0)
 
-            self._refreshSnake(snake)
-            return self._getObservations(),reward,self.done, {}
+        return self._getObservations(),reward[0],self.done, {}
      
     
     def render(self):
+        for snake in self.snakes :
+            self._refreshSnake(snake)
         self.canvas.tag_raise('score')
         self.root.update_idletasks()
         self.root.update()
