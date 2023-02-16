@@ -12,13 +12,15 @@ class SnakeEnv :
         self.snakes = snakes
         self.done = False
         self._spawnApple()
-        self._displayWindow()
     
     def reset(self):
-        self.root.destroy()
+        if hasattr(self,'root') :
+            self.root.destroy()
+            del self.root
         for snake in self.snakes :
             snake.reset()
         self.__init__(self.sizeX+1,self.sizeY+1,self.snakes)
+        return self._getObservations()
         
     def step(self,actions):
         #Applying actions
@@ -46,6 +48,8 @@ class SnakeEnv :
      
     
     def render(self):
+        if not(hasattr(self,'root')) :
+            self._displayWindow()
         for snake in self.snakes :
             self._refreshSnake(snake)
         self.canvas.tag_raise('score')
@@ -58,8 +62,8 @@ class SnakeEnv :
         x,y = self.snakes[0].x,self.snakes[0].y
         dx,dy = directions[self.snakes[0].direction]
 
-        observation = [
-            # TODO 
+        return [
+            
             #nearest left danger
             self._nearestDanger(x,y,-dy,dx),
                        
@@ -81,6 +85,7 @@ class SnakeEnv :
             self.snakes[0].y > self.appleY,
             self.snakes[0].y < self.appleY  
         ]
+        
     
     def _isColliding(self,x,y) :
         allTailSquares = []
@@ -105,7 +110,7 @@ class SnakeEnv :
         if (self._isColliding(baseX,baseY)) :
             return 0
         else :
-            return self._nearestDanger(self,baseX+deltaX,baseY+deltaY,deltaX,deltaY) + 1
+            return self._nearestDanger(baseX+deltaX,baseY+deltaY,deltaX,deltaY) + 1
 
     def _displayWindow(self) :
         self.root = Tk()

@@ -10,15 +10,17 @@ class GameManager:
         self.tickInterval = tickInterval
     
     def run(self) :
+        state = self.env.reset()
         while(not(self.env.done)) :
             actions = []
             for agent in self.agents :
-                actions.append(agent.getAction())
+                actions.append(agent.getAction(state))
                 # print(agent.getAction().direction)
-            self.env.step(actions)
+            state,_,_,_ = self.env.step(actions)
             self.env.render() 
             sleep(self.tickInterval)
         self.env.reset()
+        sleep(1)
         self.run()
 
     

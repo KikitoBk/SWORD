@@ -21,5 +21,5 @@ class PlayerAgent (Agent):
         if hasattr(key, 'char'):
             self.direction = self.keyBinding.get(key.char,self.direction)
 
-    def getAction(self):
+    def getAction(self,state):
         return Action(self.id,self.direction)
