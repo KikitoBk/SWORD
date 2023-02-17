@@ -14,6 +14,7 @@ class Snake :
         self._bodyParts = [Body(x,y+l+1) for l in range(length)]
         self.direction = 'UP'
         self.lastRemoved = Body(x,y+length+1)
+        self.lastPosition = Body(self.x,self.y)
         self.score = 0
             
     def getOccupiedSquares(self) :
@@ -23,6 +24,7 @@ class Snake :
         return [(body.x,body.y) for body in self._bodyParts]
     
     def step(self,action) :
+        self.lastPosition.setPosition(self.x,self.y)
         self._bodyParts.insert(0,Body(self.x,self.y))
         self.lastRemoved = self._bodyParts.pop()
 

@@ -45,9 +45,14 @@ class SnakeEnv :
                 self.done |= True
                 reward.append(-30)
             else :
+                if(self._distanceFrom(snake.lastPosition.x,snake.lastPosition.y,self.appleX,self.appleY)>self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY)) :
+                    reward.append(1)
+                else :
+                    reward.append(-1)
+
                 # reward.append((self._getMaxDistance()-self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY))*10/self._getMaxDistance())
-                rew = int(not(snake.x > self.appleX)) + int(not(snake.x < self.appleX))+int(not(snake.y > self.appleY))+int(not(snake.y < self.appleY))
-                reward.append(rew)
+                # rew = int(not(snake.x > self.appleX)) + int(not(snake.x < self.appleX))+int(not(snake.y > self.appleY))+int(not(snake.y < self.appleY))
+                # reward.append(rew)
         print(reward[0])
         return self._getObservations(),reward[0],self.done, {}
      
@@ -71,13 +76,18 @@ class SnakeEnv :
         return [
             
             #nearest left danger
-            self._nearestDanger(x,y,-dy,dx),
+            # self._nearestDanger(x,y,-dy,dx),
+            int(self._isColliding(x-dy,y+dx)),
                        
             #nearest forward danger
-            self._nearestDanger(x,y,dx,dy),
+            # self._nearestDanger(x,y,dx,dy),
+            int(self._isColliding(x+dx,y+dy)),
+
 
             #nearest right danger
-            self._nearestDanger(x,y,dy,-dx),
+            # self._nearestDanger(x,y,dy,-dx),
+            int(self._isColliding(x+dy,y-dx)),
+
 
             # Actual direction
             int(self.snakes[0].direction == 'UP'),
