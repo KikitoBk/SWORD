@@ -54,7 +54,7 @@ class SnakeEnv :
                 # rew = int(not(snake.x > self.appleX)) + int(not(snake.x < self.appleX))+int(not(snake.y > self.appleY))+int(not(snake.y < self.appleY))
                 # reward.append(rew)
         # print(reward[0])
-        return self._getObservations(),reward[0],self.done, {}
+        return self._getObservations(),reward,self.done, {}
      
     
     def render(self):
@@ -70,10 +70,11 @@ class SnakeEnv :
     def _getObservations(self) :
 
         directions = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
-        x,y = self.snakes[0].x,self.snakes[0].y
-        dx,dy = directions[self.snakes[0].direction]
-
-        obs = [
+        observations = []
+        for snake in self.snakes :
+            x,y = snake.x,snake.y
+            dx,dy = directions[snake.direction]
+            observations.append([
             
             #nearest left danger
             # self._nearestDanger(x,y,-dy,dx),
@@ -90,20 +91,19 @@ class SnakeEnv :
 
 
             # Actual direction
-            int(self.snakes[0].direction == 'UP'),
-            int(self.snakes[0].direction == 'DOWN'),
-            int(self.snakes[0].direction == 'LEFT'),
-            int(self.snakes[0].direction == 'RIGHT'),
+            int(snake.direction == 'UP'),
+            int(snake.direction == 'DOWN'),
+            int(snake.direction == 'LEFT'),
+            int(snake.direction == 'RIGHT'),
 
             #Apple location 
-            int(self.snakes[0].x > self.appleX),
-            int(self.snakes[0].x < self.appleX),
-            int(self.snakes[0].y > self.appleY),
-            int(self.snakes[0].y < self.appleY)  
-        ]
+            int(snake.x > self.appleX),
+            int(snake.x < self.appleX),
+            int(snake.y > self.appleY),
+            int(snake.y < self.appleY)  
+            ])
         # print(obs)
-        return obs
-        
+        return observations
     
     def _isColliding(self,x,y) :
         allTailSquares = []
