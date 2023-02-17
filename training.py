@@ -17,6 +17,8 @@ agent = DQNAgent('AI',epsilon_decay=0.997)
 num_episodes = 50
 for episode in range(num_episodes):
     state = env.reset()
+    sleep(1)
+    
     # state = np.reshape(state, [1, state_size])
     done = False
     score = 0
@@ -31,7 +33,6 @@ for episode in range(num_episodes):
         if done:
             print(f"episode: {episode+1}/{num_episodes}, score: {score}, epsilon: {agent.epsilon:.2f}")
         agent.replay()
-    sleep(1)
 
 # Save the trained model
 agent.save('snake_dqn.h5')

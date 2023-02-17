@@ -53,7 +53,7 @@ class SnakeEnv :
                 # reward.append((self._getMaxDistance()-self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY))*10/self._getMaxDistance())
                 # rew = int(not(snake.x > self.appleX)) + int(not(snake.x < self.appleX))+int(not(snake.y > self.appleY))+int(not(snake.y < self.appleY))
                 # reward.append(rew)
-        print(reward[0])
+        # print(reward[0])
         return self._getObservations(),reward[0],self.done, {}
      
     
@@ -73,7 +73,7 @@ class SnakeEnv :
         x,y = self.snakes[0].x,self.snakes[0].y
         dx,dy = directions[self.snakes[0].direction]
 
-        return [
+        obs = [
             
             #nearest left danger
             # self._nearestDanger(x,y,-dy,dx),
@@ -101,6 +101,8 @@ class SnakeEnv :
             int(self.snakes[0].y > self.appleY),
             int(self.snakes[0].y < self.appleY)  
         ]
+        # print(obs)
+        return obs
         
     
     def _isColliding(self,x,y) :
