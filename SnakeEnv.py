@@ -1,4 +1,5 @@
 from threading import Timer
+from time import sleep
 from tkinter import *
 from random import randint
 import math
@@ -38,20 +39,23 @@ class SnakeEnv :
                 self._spawnApple()
                 self._refreshApple()
                 
-                reward.append(10)
+                reward.append(15)
                 
             if(self._isColliding(snake.x,snake.y)) :
                 self.done |= True
-                reward.append(-11)
+                reward.append(-30)
             else :
-                reward.append(self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY)*10/self._getMaxDistance())
-
+                # reward.append((self._getMaxDistance()-self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY))*10/self._getMaxDistance())
+                rew = int(not(snake.x > self.appleX)) + int(not(snake.x < self.appleX))+int(not(snake.y > self.appleY))+int(not(snake.y < self.appleY))
+                reward.append(rew)
+        print(reward[0])
         return self._getObservations(),reward[0],self.done, {}
      
     
     def render(self):
         if not(hasattr(self,'root')) :
             self._displayWindow()
+            sleep(1)
         for snake in self.snakes :
             self._refreshSnake(snake)
         self.canvas.tag_raise('score')
@@ -76,16 +80,16 @@ class SnakeEnv :
             self._nearestDanger(x,y,dy,-dx),
 
             # Actual direction
-            self.snakes[0].direction == 'UP',
-            self.snakes[0].direction == 'DOWN',
-            self.snakes[0].direction == 'LEFT',
-            self.snakes[0].direction == 'RIGHT',
+            int(self.snakes[0].direction == 'UP'),
+            int(self.snakes[0].direction == 'DOWN'),
+            int(self.snakes[0].direction == 'LEFT'),
+            int(self.snakes[0].direction == 'RIGHT'),
 
             #Apple location 
-            self.snakes[0].x > self.appleX,
-            self.snakes[0].x > self.appleX,
-            self.snakes[0].y > self.appleY,
-            self.snakes[0].y < self.appleY  
+            int(self.snakes[0].x > self.appleX),
+            int(self.snakes[0].x < self.appleX),
+            int(self.snakes[0].y > self.appleY),
+            int(self.snakes[0].y < self.appleY)  
         ]
         
     

@@ -6,7 +6,7 @@ import numpy as np
 from Action import Action
 
 class DQNAgent:
-    def __init__(self,id,file=None, gamma=0.95, epsilon=1.0, epsilon_decay=0.997, epsilon_min=0.01, learning_rate=0.001, batch_size=32):
+    def __init__(self,id,file=None, gamma=0.95, epsilon=1.0, epsilon_decay=0.995, epsilon_min=0.01, learning_rate=0.001, batch_size=12):
         self.id = id
         self.state_size = 11
         self.action_size = 3
@@ -24,8 +24,8 @@ class DQNAgent:
 
     def _build_model(self):
         model = tf.keras.Sequential([
-            tf.keras.layers.Dense(8, input_dim=self.state_size, activation='relu'),
-            tf.keras.layers.Dense(8, activation='relu'),
+            tf.keras.layers.Dense(16, input_dim=self.state_size, activation='relu'),
+            tf.keras.layers.Dense(16, activation='relu'),
             tf.keras.layers.Dense(self.action_size, activation='linear')
         ])
         model.compile(loss='mse', optimizer=tf.keras.optimizers.Adam(learning_rate=self.learning_rate))

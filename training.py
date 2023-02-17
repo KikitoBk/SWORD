@@ -11,10 +11,10 @@ env = SnakeEnv(10,10,[Snake('AI',5,5,4)])
 state_size = 11
 
 # Create the DQN agent
-agent = DQNAgent('AI')
+agent = DQNAgent('AI',epsilon_decay=0.997)
 
 # Train the agent
-num_episodes = 1000
+num_episodes = 50
 for episode in range(num_episodes):
     state = env.reset()
     # state = np.reshape(state, [1, state_size])
@@ -22,7 +22,6 @@ for episode in range(num_episodes):
     score = 0
     while not done:
         actionInt, action = agent.act(state)
-        print(action.direction)
         next_state, reward, done, _ = env.step([action])
         env.render()
         # next_state = np.reshape(next_state, [1, state_size])
