@@ -48,7 +48,7 @@ class SnakeEnv :
                 if(self._distanceFrom(snake.lastPosition.x,snake.lastPosition.y,self.appleX,self.appleY)>self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY)) :
                     reward.append(1)
                 else :
-                    reward.append(-1)
+                    reward.append(-3)
 
                 # reward.append((self._getMaxDistance()-self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY))*10/self._getMaxDistance())
                 # rew = int(not(snake.x > self.appleX)) + int(not(snake.x < self.appleX))+int(not(snake.y > self.appleY))+int(not(snake.y < self.appleY))
