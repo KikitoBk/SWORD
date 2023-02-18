@@ -22,4 +22,4 @@ class PlayerAgent (Agent):
             self.direction = self.keyBinding.get(key.char,self.direction)
 
     def getAction(self,state):
-        return Action(self.id,self.direction)
+        return Action(self.id,self.direction),False

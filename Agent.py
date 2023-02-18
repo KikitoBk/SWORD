@@ -5,4 +5,4 @@ class Agent :
         self.id = id
     
     def getAction(self) :
-        return Action(self.id,'UP')
+        return Action(self.id,'UP'),False

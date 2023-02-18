@@ -132,9 +132,15 @@ class SnakeEnv :
 
     def _distanceFrom(self,sourceX,sourceY,targetX,targetY) :
         return abs(targetX - sourceX) + abs(targetY - sourceY)
-    
+
     def _getMaxDistance(self) :
         return math.sqrt(pow(self.sizeX,2)+pow(self.sizeY,2))
+    
+    def getSnake(self,id) : 
+        for snake in self.snakes :
+            if(snake.id == id) :
+                return snake 
+                
     
     def _displayWindow(self) :
         self.root = Tk()

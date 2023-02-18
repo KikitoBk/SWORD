@@ -70,27 +70,15 @@ class DQNAgent:
             q_values = self.model.predict(np.array([state]))
             actionInt =  np.argmax(q_values[0]) 
         
-        if(state[3]) :
-            actualDirection = 'UP'
-        elif(state[4]) :
-            actualDirection = 'DOWN'
-        elif(state[5]) :
-            actualDirection = 'LEFT'
-        elif(state[6]) :
-            actualDirection = 'RIGHT'
-        
-        leftBinding = {'UP': 'LEFT', 'DOWN': 'RIGHT', 'LEFT': 'DOWN', 'RIGHT': 'UP'}
-        rightBinding = {'UP': 'RIGHT', 'DOWN': 'LEFT', 'LEFT': 'UP', 'RIGHT': 'DOWN'}
-
         #choose to go left
         if actionInt == 0 :
-            return Action(self.id,leftBinding[actualDirection])
+            return Action(self.id,'LEFT'),True
         #choose to go forward
         elif actionInt == 1 :
-            return Action(self.id,actualDirection)
+            return Action(self.id,'STRAIGHT'),True
         #choose to go right
         elif actionInt == 2 :
-            return Action(self.id,rightBinding[actualDirection])
+            return Action(self.id,'RIGHT'),True
 
     def replay(self):
         if len(self.memory) < self.batch_size:

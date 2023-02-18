@@ -14,7 +14,10 @@ class GameManager:
         while(not(self.env.done)) :
             actions = []
             for agent in self.agents :
-                actions.append(agent.getAction(state))
+                action,isLocal = agent.getAction(state)
+                if(isLocal) :
+                    self.localToGlobal(action,self.env.getSnake(agent.id))
+                actions.append(action)
                 # print(agent.getAction().direction)
             state,_,_,_ = self.env.step(actions)
             self.env.render() 
@@ -23,4 +26,16 @@ class GameManager:
         sleep(1)
         self.run()
 
-    
+    def localToGlobal(self,action,snake) :
+        leftBinding = {'UP': 'LEFT', 'DOWN': 'RIGHT', 'LEFT': 'DOWN', 'RIGHT': 'UP'}
+        rightBinding = {'UP': 'RIGHT', 'DOWN': 'LEFT', 'LEFT': 'UP', 'RIGHT': 'DOWN'}
+
+        #choose to go left
+        if action.direction == 'LEFT' :
+            action.direction = leftBinding[snake.direction]
+        #choose to go forward
+        elif action.direction == 'STRAIGHT' :
+            action.direction == snake.direction
+        #choose to go right
+        elif action.direction == 'RIGHT' :
+            action.direction = rightBinding[snake.direction]
