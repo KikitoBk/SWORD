@@ -20,11 +20,11 @@ def localToGlobal(action,snake) :
 
 
 # Create the Snake game environment
-env = SnakeEnv(10,10,[Snake('AI',5,5,4)])
+env = SnakeEnv(10,10,[Snake('AI',5,5,20)])
 
 # Create the DQN agent
-agent = DQNAgent('AI',epsilon=0.04)
-agent.load('weight/sword_v3_21.h5')
+agent = DQNAgent('AI',epsilon=0.01)
+agent.load('weight/sword_v3_44.h5')
 # Train the agent
 num_episodes = 50
 for episode in range(num_episodes):
@@ -49,7 +49,7 @@ for episode in range(num_episodes):
             print(f"episode: {episode+1}/{num_episodes}, score: {score}, epsilon: {agent.epsilon:.2f}")
         agent.replay()
     
-    agent.save('weight/sword_v3_{}.h5'.format(episode+21))
+    agent.save('weight/sword_v3_{}.h5'.format(episode+45))
 
 # Save the trained model
 
