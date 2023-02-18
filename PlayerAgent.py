@@ -4,7 +4,7 @@ from Action import Action
 
 
 class PlayerAgent (Agent):
-    def __init__(self,id,leftKey,upKey,rigthKey,downKey) :
+    def __init__(self,id,leftKey='q',upKey='z',rigthKey='d',downKey='s') :
         super().__init__(id)
         self.direction = 'UP'
         self.keyBinding = dict()

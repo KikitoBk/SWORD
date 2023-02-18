@@ -8,7 +8,7 @@ from Action import Action
 class DQNAgent:
     def __init__(self,id,file=None, gamma=0.95, epsilon=1.0, epsilon_decay=0.995, epsilon_min=0.01, learning_rate=0.001, batch_size=12):
         self.id = id
-        self.state_size = 11
+        self.state_size = 6
         self.action_size = 3
         self.gamma = gamma
         self.epsilon = epsilon
@@ -24,8 +24,8 @@ class DQNAgent:
 
     def _build_model(self):
         model = tf.keras.Sequential([
-            tf.keras.layers.Dense(16, input_dim=self.state_size, activation='relu'),
-            tf.keras.layers.Dense(16, activation='relu'),
+            tf.keras.layers.Dense(6, input_dim=self.state_size, activation='relu'),
+            tf.keras.layers.Dense(6, activation='relu'),
             tf.keras.layers.Dense(self.action_size, activation='linear')
         ])
         model.compile(loss='mse', optimizer=tf.keras.optimizers.Adam(learning_rate=self.learning_rate))
@@ -41,27 +41,15 @@ class DQNAgent:
             q_values = self.model.predict(np.array([state]))
             actionInt = np.argmax(q_values[0])
         
-        if(state[3]) :
-            actualDirection = 'UP'
-        elif(state[4]) :
-            actualDirection = 'DOWN'
-        elif(state[5]) :
-            actualDirection = 'LEFT'
-        elif(state[6]) :
-            actualDirection = 'RIGHT'
-        
-        leftBinding = {'UP': 'LEFT', 'DOWN': 'RIGHT', 'LEFT': 'DOWN', 'RIGHT': 'UP'}
-        rightBinding = {'UP': 'RIGHT', 'DOWN': 'LEFT', 'LEFT': 'UP', 'RIGHT': 'DOWN'}
-
         #choose to go left
         if actionInt == 0 :
-            return actionInt,Action(self.id,leftBinding[actualDirection])
+            return actionInt,Action(self.id,'LEFT'),True
         #choose to go forward
         elif actionInt == 1 :
-            return actionInt,Action(self.id,actualDirection)
+            return actionInt,Action(self.id,'STRAIGHT'),True
         #choose to go right
         elif actionInt == 2 :
-            return actionInt,Action(self.id,rightBinding[actualDirection])
+            return actionInt,Action(self.id,'RIGHT'),True
 
     def getAction(self,state) :
         if np.random.rand() <= self.epsilon:

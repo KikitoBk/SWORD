@@ -16,7 +16,8 @@ class GameManager:
             for i,agent in enumerate(self.agents) :
                 action,isLocal = agent.getAction(observations[i])
                 if(isLocal) :
-                    self.localToGlobal(action,self.env.getSnake(agent.id))
+                    action.direction = self.localToGlobal(action,self.env.getSnake(agent.id))
+                
                 actions.append(action)
                 # print(agent.getAction().direction)
             observations,_,_,_ = self.env.step(actions)
@@ -32,10 +33,10 @@ class GameManager:
 
         #choose to go left
         if action.direction == 'LEFT' :
-            action.direction = leftBinding[snake.direction]
+            return leftBinding[snake.direction]
         #choose to go forward
         elif action.direction == 'STRAIGHT' :
-            action.direction == snake.direction
+            return snake.direction
         #choose to go right
         elif action.direction == 'RIGHT' :
-            action.direction = rightBinding[snake.direction]
+            return  rightBinding[snake.direction]
