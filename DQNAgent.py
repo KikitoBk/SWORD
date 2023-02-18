@@ -8,7 +8,7 @@ from Action import Action
 class DQNAgent:
     def __init__(self,id,file=None, gamma=0.95, epsilon=1.0, epsilon_decay=0.995, epsilon_min=0.01, learning_rate=0.001, batch_size=12):
         self.id = id
-        self.state_size = 11
+        self.state_size = 9
         self.action_size = 3
         self.gamma = gamma
         self.epsilon = epsilon

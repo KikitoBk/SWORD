@@ -8,11 +8,11 @@ from DQNAgent import DQNAgent
 env = SnakeEnv(10,10,[Snake('AI',5,5,4)])
 
 # Create the DQN agent
-agent = DQNAgent('AI',epsilon=0.01)
-agent.load('weight/sword_v2.h5')
+agent = DQNAgent(id='AI',epsilon=0.01)
+agent.load('weight/v4/sword_v4_65.h5')
 # Train the agent
-num_episodes = 10
-for episode in range(num_episodes):
+num_episodes = 200
+for episode in range(65,num_episodes):
     state = env.reset()
     sleep(1)
     
@@ -28,6 +28,7 @@ for episode in range(num_episodes):
         if done:
             print(f"episode: {episode+1}/{num_episodes}, score: {score}, epsilon: {agent.epsilon:.2f}")
         agent.replay()
-    agent.save('weight/sword_v3_{}.h5'.format(episode+1))
+    if(episode%10 == 0 and episode != 0 or episode > 20):
+        agent.save('weight/v4/sword_v4_{}.h5'.format(episode+1))
 
 # Save the trained model

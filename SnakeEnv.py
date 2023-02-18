@@ -45,7 +45,7 @@ class SnakeEnv :
                 self.done |= True
                 reward.append(-30)
             else :
-                if(self._distanceFrom(snake.lastPosition.x,snake.lastPosition.y,self.appleX,self.appleY)>self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY)) :
+                if(abs(snake.lastPosition.x-self.appleX) > abs(snake.x - self.appleX) or abs(snake.lastPosition.y-self.appleY) > abs(snake.y - self.appleY)) :
                     reward.append(1)
                 else :
                     reward.append(-3)
@@ -95,11 +95,9 @@ class SnakeEnv :
             int(self.snakes[0].direction == 'LEFT'),
             int(self.snakes[0].direction == 'RIGHT'),
 
-            #Apple location 
-            int(self.snakes[0].x > self.appleX),
-            int(self.snakes[0].x < self.appleX),
-            int(self.snakes[0].y > self.appleY),
-            int(self.snakes[0].y < self.appleY)  
+            #Distance to apple
+            int(self.snakes[0].x - self.appleX),
+            int(self.snakes[0].y - self.appleY),
         ]
         # print(obs)
         return obs
