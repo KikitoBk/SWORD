@@ -10,22 +10,20 @@ class GameManager:
         self.tickInterval = tickInterval
     
     def run(self) :
-        observations = self.env.reset()
-        while(not(self.env.done)) :
-            actions = []
-            for i,agent in enumerate(self.agents) :
-                action,isLocal = agent.getAction(observations[i])
-                if(isLocal) :
-                    action.direction = self.localToGlobal(action,self.env.getSnake(agent.id))
-                
-                actions.append(action)
-                # print(agent.getAction().direction)
-            observations,_,_,_ = self.env.step(actions)
-            self.env.render() 
-            sleep(self.tickInterval)
-        self.env.reset()
-        sleep(1)
-        self.run()
+        while True :
+            observations = self.env.reset()
+            sleep(1)
+            while(not(self.env.done)) :
+                actions = []
+                for i,agent in enumerate(self.agents) :
+                    action,isLocal = agent.getAction(observations[i])
+                    if(isLocal) :
+                        action.direction = self.localToGlobal(action,self.env.getSnake(agent.id))
+                    
+                    actions.append(action)
+                observations,_,_,_ = self.env.step(actions)
+                self.env.render() 
+                sleep(self.tickInterval)
 
     def localToGlobal(self,action,snake) :
         leftBinding = {'UP': 'LEFT', 'DOWN': 'RIGHT', 'LEFT': 'DOWN', 'RIGHT': 'UP'}
