@@ -1,11 +1,16 @@
-from Grid import Grid 
+# from Grid import Grid 
+from DQNAgent import DQNAgent
 from Snake import Snake
+from PlayerAgent import PlayerAgent
+from GameManager import GameManager
 
-gridSizeX = 30
-gridSizeY = 30 
-interval = 0.10
-snake1 = Snake('Joueur1',gridSizeX//3,gridSizeY//3,3,'green','q','d','z','s')
-snake2 = Snake('Joueur2',gridSizeX//2,gridSizeY//2,3,'orange','j','l','i','k')
-snakes = [snake1,snake2]
-snakes = [snake1]
-grid = Grid(gridSizeX,gridSizeY,interval,snakes)
+gridSizeX = 20
+gridSizeY = 20
+interval = 0.15
+snake1 = Snake('AI',gridSizeX//3,gridSizeY//3,3,'green')
+snake2 = Snake('AI2',gridSizeX//2,gridSizeY//2,3,'yellow')
+dqn2 = DQNAgent('AI2','weight/sword_v3_70.h5',epsilon=0)
+dqn = DQNAgent('AI','weight/sword_v3_70.h5',epsilon=0)
+
+game = GameManager(interval,gridSizeX,gridSizeY,[dqn,dqn2],[snake1,snake2])
+game.run()
