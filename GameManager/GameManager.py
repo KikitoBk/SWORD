@@ -14,7 +14,6 @@ class GameManager:
     def run(self) :
         while True :
             observations = self.env.reset()
-            sleep(1)
             while(not(self.env.done)) :
                 actions = []
                 for i,agent in enumerate(self.agents) :

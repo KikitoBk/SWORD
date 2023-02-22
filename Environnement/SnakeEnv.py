@@ -21,6 +21,7 @@ class SnakeEnv :
             del self.root
         for snake in self.snakes :
             snake.reset()
+        sleep(1)
         self.__init__(self.sizeX+1,self.sizeY+1,self.snakes)
         return self._getObservations()
         
@@ -50,10 +51,6 @@ class SnakeEnv :
                 else :
                     reward.append(-3)
 
-                # reward.append((self._getMaxDistance()-self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY))*10/self._getMaxDistance())
-                # rew = int(not(snake.x > self.appleX)) + int(not(snake.x < self.appleX))+int(not(snake.y > self.appleY))+int(not(snake.y < self.appleY))
-                # reward.append(rew)
-        # print(reward[0])
         return self._getObservations(),reward,self.done, {}
      
     
@@ -61,8 +58,10 @@ class SnakeEnv :
         if not(hasattr(self,'root')) :
             self._displayWindow()
             sleep(1)
-        for snake in self.snakes :
-            self._refreshSnake(snake)
+        else :
+            for snake in self.snakes :
+                self._refreshSnake(snake)
+            
         self.canvas.tag_raise('score')
         self.root.update_idletasks()
         self.root.update()
@@ -149,9 +148,6 @@ class SnakeEnv :
         self._refreshApple()
         for snake in self.snakes :
             self._drawSnake(snake)
-        # Timer(self.tickInterval,self.onTick).start()
-        self.root.update_idletasks()
-        self.root.update()
         
     # Draw the entire snake
     def _drawSnake(self,snake) :
