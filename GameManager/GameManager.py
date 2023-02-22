@@ -1,10 +1,12 @@
 from time import sleep
-from Agent.PlayerAgent import PlayerAgent
+from Environnement.Snake import Snake
 from Environnement.SnakeEnv import SnakeEnv
 
 class GameManager:
-    # TODO init env and snake and agent
-    def __init__(self,tickInterval,gridSizeX,gridSizeY,agents,snakes) :
+    def __init__(self,tickInterval,gridSizeX,gridSizeY,agents) :
+        
+        snakes = [Snake(agent.id,(gridSizeX//(len(agents)+1))*(i+1),gridSizeY//2,3,agent.color) for i,agent in enumerate(agents) ]
+        
         self.env = SnakeEnv(gridSizeX,gridSizeY,snakes)
         self.agents = agents
         self.tickInterval = tickInterval
