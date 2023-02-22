@@ -3,7 +3,7 @@ from collections import deque
 import random
 import numpy as np
 
-from Action import Action
+from Environnement.Action import Action
 
 class DQNAgent:
     def __init__(self,id,file=None, gamma=0.95, epsilon=1.0, epsilon_decay=0.995, epsilon_min=0.01, learning_rate=0.001, batch_size=12):

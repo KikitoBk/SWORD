@@ -1,8 +1,8 @@
 from time import sleep
 import numpy as np
-from Snake import Snake
-from SnakeEnv import SnakeEnv
-from DQNAgent import DQNAgent
+from Environnement.Snake import Snake
+from Environnement.SnakeEnv import SnakeEnv
+from Agent.DQNAgent import DQNAgent
 
 def localToGlobal(action,snake) :
     leftBinding = {'UP': 'LEFT', 'DOWN': 'RIGHT', 'LEFT': 'DOWN', 'RIGHT': 'UP'}

@@ -1,4 +1,4 @@
-from Action import Action
+from Environnement.Action import Action
 
 class Agent : 
     def __init__(self,id) :

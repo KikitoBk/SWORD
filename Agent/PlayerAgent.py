@@ -1,6 +1,6 @@
-from Agent import Agent
+from Agent.Agent import Agent
 from pynput import keyboard
-from Action import Action
+from Environnement.Action import Action
 
 
 class PlayerAgent (Agent):

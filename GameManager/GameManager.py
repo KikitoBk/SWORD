@@ -1,6 +1,6 @@
 from time import sleep
-from PlayerAgent import PlayerAgent
-from SnakeEnv import SnakeEnv
+from Agent.PlayerAgent import PlayerAgent
+from Environnement.SnakeEnv import SnakeEnv
 
 class GameManager:
     # TODO init env and snake and agent

@@ -1,8 +1,8 @@
 # from Grid import Grid 
-from DQNAgent import DQNAgent
-from Snake import Snake
-from PlayerAgent import PlayerAgent
-from GameManager import GameManager
+from Agent.DQNAgent import DQNAgent
+from Environnement.Snake import Snake
+from Agent.PlayerAgent import PlayerAgent
+from GameManager.GameManager import GameManager
 
 gridSizeX = 20
 gridSizeY = 20

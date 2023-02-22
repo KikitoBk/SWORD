@@ -1,4 +1,4 @@
-from Body import Body
+from Environnement.Body import Body
 from enum import Enum
 from pynput import keyboard
 
