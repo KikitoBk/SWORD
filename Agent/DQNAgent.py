@@ -7,7 +7,7 @@ from Agent.Agent import Agent
 from Environnement.Action import Action
 
 class DQNAgent(Agent):
-    def __init__(self,color='green',file=None, gamma=0.95, epsilon=1.0, epsilon_decay=0.995, epsilon_min=0.01, learning_rate=0.001, batch_size=12):
+    def __init__(self,color='green',file=None, gamma=0.95, epsilon=0, epsilon_decay=0.995, epsilon_min=0.01, learning_rate=0.001, batch_size=12):
         super().__init__(color)
         self.state_size = 6
         self.action_size = 3
