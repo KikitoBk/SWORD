@@ -5,6 +5,9 @@ You can also only use the Snake Environnement to train your own AI with your own
 
 ![image](https://user-images.githubusercontent.com/86195847/218512652-eb085237-c5d2-42b3-8b93-1792dd84c440.png)
 
+## Lore
+
+With the arrival of DAN, the dark side of ChatGPT, the world really needed to be protected from his malicious plans. So we decided to create an even more smarter AI to defeat him, one able to play Snake.
 
 ## Getting started 
 
@@ -37,5 +40,20 @@ players.append(DQNAgent('green','weight/sword_v3_70.h5'))
 players.append(PlayerAgent('blue'))
 ```
 
-## Train your own AI model
+## Snake Environnement API
 
+The Class SnakeEnv expose three public method to interact with.
+First of all, you need to instantiate an SnakeEnv object.
+
+```python
+snakes = []
+snakes.append(Snake('id1',5,5,3)) #Snake(id,x,y,startingLength)
+
+env = SnakeEnv(20,20,snakes) #SnakeEnv(xGridSize,yGridSize,Snake[])
+```
+
+
+
+## How to contribute
+
+Feel free to contact us for any improvements to this project, note that we're beginner in the AI domain. We are open to build again either the main structure or minor details as long as it improves the project in some way. 
