@@ -24,7 +24,7 @@ class SnakeEnv :
             snake.reset()
         sleep(1)
         self.__init__(self.sizeX+1,self.sizeY+1,self.snakes)
-        return self._getObservations()
+        return [self._getObservation(snake) for snake in self.snakes]
         
     def step(self,actions):
         #Applying actions
