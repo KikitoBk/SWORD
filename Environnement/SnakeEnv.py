@@ -13,6 +13,7 @@ class SnakeEnv :
         self.YGridSize = sizeY * self.squareSize
         self.snakes = snakes
         self.done = False
+        self.refreshApple = False
         self._spawnApple()
     
     def reset(self):
@@ -36,10 +37,8 @@ class SnakeEnv :
             # Checking apple
             if(snake.x == self.appleX and snake.y == self.appleY) :
                 snake.grow()
-                self.canvas.itemconfig('score_'+snake.id,text=str(snake.score))
+                self.refreshApple = True
                 self._spawnApple()
-                self._refreshApple()
-                
                 reward.append(15)
                 
             if(self._isColliding(snake.x,snake.y)) :
@@ -61,7 +60,10 @@ class SnakeEnv :
         else :
             for snake in self.snakes :
                 self._refreshSnake(snake)
-            
+                self.canvas.itemconfig('score_'+snake.id,text=str(snake.score))
+        if(self.refreshApple) :
+            self._refreshApple()
+            self.refreshApple = False
         self.canvas.tag_raise('score')
         self.root.update_idletasks()
         self.root.update()
