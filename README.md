@@ -52,7 +52,20 @@ snakes.append(Snake('id1',5,5,3)) #Snake(id,x,y,startingLength)
 env = SnakeEnv(20,20,snakes) #SnakeEnv(xGridSize,yGridSize,Snake[])
 ```
 
+You can then modify the envrionnement with the method "step" and pass an array of each action to apply in the environnement.
+```python
+env.step([Action('id1','LEFT')]) # Direction : ('LEFT','RIGHT','UP','DOWN')
+```
 
+To visualize the currenct environnnemnt, use the method "render" and call it again as soon as you want to update the rendering.
+```python
+env.render()
+```
+Finally, you can restart the environnement using the method "reset"
+```ptyhon
+env.reset()
+```
+## Train your own AI Model
 
 ## How to contribute
 
