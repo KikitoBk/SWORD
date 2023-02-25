@@ -8,7 +8,7 @@ from Environnement.Action import Action
 
 class DQNAgent(Agent):
     def __init__(self,color='green',file=None, gamma=0.95, epsilon=0, epsilon_decay=0.995, epsilon_min=0.01, learning_rate=0.001, batch_size=12):
-        super().__init__(color)
+        super().__init__(True,color)
         self.state_size = 6
         self.action_size = 3
         self.gamma = gamma
@@ -44,13 +44,13 @@ class DQNAgent(Agent):
         
         #choose to go left
         if actionInt == 0 :
-            return actionInt,Action(self.id,'LEFT'),True
+            return actionInt,Action(self.id,'LEFT')
         #choose to go forward
         elif actionInt == 1 :
-            return actionInt,Action(self.id,'STRAIGHT'),True
+            return actionInt,Action(self.id,'STRAIGHT')
         #choose to go right
         elif actionInt == 2 :
-            return actionInt,Action(self.id,'RIGHT'),True
+            return actionInt,Action(self.id,'RIGHT')
 
     def getAction(self,state) :
         if np.random.rand() <= self.epsilon:
@@ -61,13 +61,13 @@ class DQNAgent(Agent):
         
         #choose to go left
         if actionInt == 0 :
-            return Action(self.id,'LEFT'),True
+            return Action(self.id,'LEFT')
         #choose to go forward
         elif actionInt == 1 :
-            return Action(self.id,'STRAIGHT'),True
+            return Action(self.id,'STRAIGHT')
         #choose to go right
         elif actionInt == 2 :
-            return Action(self.id,'RIGHT'),True
+            return Action(self.id,'RIGHT')
 
     def replay(self):
         if len(self.memory) < self.batch_size:

@@ -5,7 +5,7 @@ from Environnement.Action import Action
 
 class PlayerAgent (Agent):
     def __init__(self,color='green',leftKey='q',upKey='z',rigthKey='d',downKey='s') :
-        super().__init__(color)
+        super().__init__(False,color)
         self.direction = 'UP'
         self.keyBinding = dict()
         self.keyBinding[leftKey] = 'LEFT'
@@ -22,4 +22,4 @@ class PlayerAgent (Agent):
             self.direction = self.keyBinding.get(key.char,self.direction)
 
     def getAction(self,state):
-        return Action(self.id,self.direction),False
+        return Action(self.id,self.direction)
