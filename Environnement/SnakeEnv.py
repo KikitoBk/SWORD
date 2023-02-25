@@ -32,25 +32,22 @@ class SnakeEnv :
             for action in actions : 
                 if(snake.id == action.id) :
                     snake.step(action.direction)
-        reward = []
+        rewards = []
         for snake in self.snakes :
             # Checking apple
             if(snake.x == self.appleX and snake.y == self.appleY) :
                 snake.grow()
                 self.refreshApple = True
                 self._spawnApple()
-                reward.append(15)
+                rewards.append(self._getAppleReward(snake))
                 
             if(self._isColliding(snake.x,snake.y)) :
                 self.done |= True
-                reward.append(-30)
+                rewards.append(self._getCollisionReward(snake))
             else :
-                if(self._distanceFrom(snake.lastPosition.x,snake.lastPosition.y,self.appleX,self.appleY)>self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY)) :
-                    reward.append(1)
-                else :
-                    reward.append(-3)
-
-        return self._getObservations(),reward,self.done, {}
+                rewards.append(self._getOtherReward(snake))
+        observations = [self._getObservation(snake) for snake in self.snakes]
+        return observations,rewards,self.done, {}
      
     
     def render(self):
@@ -68,38 +65,45 @@ class SnakeEnv :
         self.root.update_idletasks()
         self.root.update()
     
-    def _getObservations(self) :
+    def _getAppleReward(self,snake) :
+        return 15
+    
+    def _getCollisionReward(self,snake) :
+        return -30
+    
+    def _getOtherReward(self,snake) :
+        return 1 if (self._distanceFrom(snake.lastPosition.x,snake.lastPosition.y,self.appleX,self.appleY)>self._distanceFrom(snake.x,snake.y,self.appleX,self.appleY))  else -3
+    
+    
+    def _getObservation(self,snake) :
 
         directions = {'UP': (0, -1), 'DOWN': (0, 1), 'LEFT': (-1, 0), 'RIGHT': (1, 0)}
         leftBinding = {'UP': 'LEFT', 'DOWN': 'RIGHT', 'LEFT': 'DOWN', 'RIGHT': 'UP'}
         rightBinding = {'UP': 'RIGHT', 'DOWN': 'LEFT', 'LEFT': 'UP', 'RIGHT': 'DOWN'}
-        observations = []
-        for snake in self.snakes :
-            x,y = snake.x,snake.y
-            dx,dy = directions[snake.direction]
-            lx,ly = directions[leftBinding[snake.direction]]
-            rx,ry = directions[rightBinding[snake.direction]]
-            obs = [
-            
-            #danger to the left
-            int(self._isColliding(x-dy,y+dx)),
-                       
-            #danger forward
-            int(self._isColliding(x+dx,y+dy)),
+    
+        x,y = snake.x,snake.y
+        dx,dy = directions[snake.direction]
+        lx,ly = directions[leftBinding[snake.direction]]
+        rx,ry = directions[rightBinding[snake.direction]]
+        return [
+        
+        #danger to the left
+        int(self._isColliding(x-dy,y+dx)),
+                    
+        #danger forward
+        int(self._isColliding(x+dx,y+dy)),
 
-            #danger to the right
-            int(self._isColliding(x+dy,y-dx)),
+        #danger to the right
+        int(self._isColliding(x+dy,y-dx)),
 
-            #Apple is on left
-            int(self._distanceFrom(x,y,self.appleX,self.appleY)>self._distanceFrom(x+lx,y+ly,self.appleX,self.appleY)),
-            #Apple is forward
-            int(self._distanceFrom(x,y,self.appleX,self.appleY)>self._distanceFrom(x+dx,y+dy,self.appleX,self.appleY)),
-            #Apple is on right
-            int(self._distanceFrom(x,y,self.appleX,self.appleY)>self._distanceFrom(x+rx,y+ry,self.appleX,self.appleY)),
+        #Apple is on left
+        int(self._distanceFrom(x,y,self.appleX,self.appleY)>self._distanceFrom(x+lx,y+ly,self.appleX,self.appleY)),
+        #Apple is forward
+        int(self._distanceFrom(x,y,self.appleX,self.appleY)>self._distanceFrom(x+dx,y+dy,self.appleX,self.appleY)),
+        #Apple is on right
+        int(self._distanceFrom(x,y,self.appleX,self.appleY)>self._distanceFrom(x+rx,y+ry,self.appleX,self.appleY)),
 
-            ]
-            observations.append(obs)
-        return observations
+        ]
     
     def _isColliding(self,x,y) :
         allTailSquares = []
